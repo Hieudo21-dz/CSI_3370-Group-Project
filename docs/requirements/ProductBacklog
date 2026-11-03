@@ -1,0 +1,173 @@
+System Users / Actors:
+Student
+Search equipment, view availability, reserve eligible equipment, cancel eligible reservations, and view personal reservations/checkouts. 
+Faculty
+Perform user reservation functions; business rules may permit different limits from students. 
+Staff / Administrator
+Manage equipment records and process equipment checkout and return operations. 
+
+
+Functional Requirements:
+FR-1 User and Role Support 
+The system shall distinguish among Student, Faculty, and Staff/Administrator roles. 
+FR-2 View User Activity 
+A user shall be able to view their current reservations and active checkouts. 
+FR-3 Equipment Information 
+The system shall maintain equipment information including an identifier, name, type, status, and availability. 
+FR-4 Equipment Status 
+Equipment shall support at least AVAILABLE, RESERVED, CHECKED_OUT, and MAINTENANCE states. 
+FR-5 Equipment Administration 
+Authorized staff shall be able to add and update equipment information. 
+FR-6 Search Equipment 
+A user shall be able to search for equipment and filter results by at least one criterion such as equipment type. 
+FR-7 View Availability 
+The system shall display whether equipment is available for reservation or checkout. 
+FR-8 Create Reservation 
+An eligible user shall be able to reserve available equipment. 
+FR-9 Prevent Invalid Reservation 
+The system shall prevent reservation of equipment that is unavailable or otherwise ineligible for reservation. 
+FR-10 Reservation Limits 
+The system shall enforce a configurable maximum number of active reservations and/or checkouts for a user role. 
+FR-11 Cancel Reservation 
+A user shall be able to cancel an eligible reservation. 
+FR-12 Checkout Equipment 
+Authorized staff shall be able to check out eligible equipment to an eligible user. 
+FR-13 Checkout Data 
+The system shall record the checkout date and due date. 
+FR-14 Return Equipment 
+Authorized staff shall be able to process an equipment return. 
+FR-15 Availability Update 
+The system shall update equipment status/availability when reservation, checkout, return, or maintenance operations occur. 
+FR-16 Notification 
+The system shall generate a notification when a reservation or checkout is successfully completed. 
+FR-17 REST API 
+The system shall expose major operations through REST endpoints using appropriate HTTP methods and JSON data. 
+
+
+Non-Functional Requirements:
+NFR-1 Maintainability 
+Business rules shall be separated from UI/controller and database-access concerns. 
+NFR-2 Testability 
+Service-layer business logic shall be testable without requiring a live database. 
+NFR-3 Modularity 
+Components shall have clear responsibilities and use interfaces at appropriate boundaries. 
+NFR-4 Usability 
+The user interface or API demonstration shall provide clear success and error feedback. 
+NFR-5 Reliability 
+Invalid operations shall be rejected without leaving inconsistent reservation, checkout, or equipment state. 
+NFR-6 Code Quality 
+Code shall use meaningful names, appropriate encapsulation, and consistent formatting. 
+
+
+User Stories and Acceptance Criteria:
+US-1: (FR-1). As a student, I want the system to distinguish my role, so that I can search and reserve equipment, cancel reservations, and view personal reservations and checkouts.
+  A student is permitted the roles, operations, limitations allowed for Student, including searching equipment, viewing availability, reserving eligible equipment, canceling eligible reservations, viewing personal reservations.
+  The system applies the student limit and loan period.
+  The system denies access to administrator operations.
+US-2: (FR-1) As a faculty member, I want the system to distinguish my role, so that I can search and reserve equipment, cancel reservations, and view personal reservations and checkouts with different limitations from a student.
+  A faculty member is permitted the roles, operations, and limitations allowed for Faculty, including searching equipment, viewing availability, reserving eligible equipment, canceling eligible reservations, viewing personal reservations.
+  The system applies the faculty member limit and loan period.
+  The system denies access to administrator operations.
+US-3: (FR-1) As an administrator, I want the system to distinguish my role, so that I can manage equipment records and process equipment checkout and return operations.
+  An administrator is permitted the roles and operations allowed for an Administrator, including managing equipment records, processing equipment checkout, and processing equipment return.
+  An administrator is not permitted to create reservations.
+US-4: (FR-2) As a user, I want to view my current reservations and active checkouts, so that I know what is currently on hold and when equipment is due.
+  The system displays only active reservations and active checkouts.
+  The system displays the records of that specific user.
+  The system displays the checkout date and due date of the active checkouts.
+  The system displays an empty list for reservations if there are no active reservations.
+  The system displays an empty list for checkouts if there are no active checkouts.
+US-5: (FR-3, FR-4, FR-5) As an administrator, I want to add equipment, so that the equipment can be reserved and checked out.
+  An administrator is able to add equipment identifier, name, type, and status.
+  The system will accept the added equipment if equipment identifier, name, type, and status are filled out.
+  The system only accepts equipment status of AVAILABLE, RESERVED, CHECKED_OUT, or MAINTENANCE.
+  The system will not accept the added equipment if a field is missing.
+  The system will not accept the equipment if the user is not an administrator.
+  The system will not accept the added equipment if there is a duplicate equipment identifier.
+US-6: (FR-3, FR-4, FR-5, FR-15) As an administrator, I want to update the equipment information, so that students and faculty can know when the equipment is available, reserved, checked out, or under maintenance.
+  An administrator is able to update the equipment status from AVAILABLE to MAINTENANCE.
+  An administrator is able to update the equipment status from MAINTENANCE to AVAILABLE.
+  An administrator is able to update equipment name and type.
+  The system rejects an administrator to update the equipment status to MAINTENANCE if the equipment status is either RESERVED or CHECKED_OUT.
+  The system rejects a non-administrator from updating equipment information.
+US-7: (FR-6) As a user, I want to search and filter equipment by type, so that I can find what I need.
+  A user can apply zero or more filters.
+  A user can search for equipment by its name.
+  The system displays only the equipment that meets the filter and/or search criteria.
+  The system displays all of the equipment if no filter or search criteria are used.
+  The system displays an empty equipment list if there are no matches to the filter or search criteria.
+US-8: (FR-3, FR-7) As a user, I want to see whether equipment is available, so that I know whether I can reserve the equipment.
+  The system displays the current status of the equipment.
+  The system displays available equipment as AVAILABLE.
+  The system displays reserved equipment as RESERVED.
+  The system displays checked out equipment as CHECKED_OUT.
+  The system displays equipment under maintenance as MAINTENANCE.
+US-9: (FR-8, FR-15) As a user, I want to reserve available equipment, so that I can use it for my classes.
+  The system creates an active reservation for the user and equipment with a reservation status of ACTIVE.
+  The system updates the equipment status to RESERVED.
+  A second user cannot reserve the exact same equipment.
+US-10: (FR-9) As a user, I want to receive a clear message when I cannot reserve equipment, so that I know why that is the case.
+  The system prevents invalid reservation if the equipment has a status of RESERVED, CHECKED_OUT, or MAINTENANCE.
+  The system displays that equipment with status of RESERVED, CHECKED_OUT, or MAINTENANCE cannot be reserved.
+  The system does not create a reservation and the equipment status is unchanged.
+US-11: (FR-10) As a system administrator, I want to set a maximum limit of active reservations and checkouts for each user role, so that equipment is shared fairly.
+  A student is limited to default limits, loaded from configuration, for active reservations and active checkouts at a time.
+  A faculty member is limited to default limits, loaded from configuration, for active reservations and active checkouts at a time.
+  The system denies a user a reservation if the user reached their maximum limit of active reservations and checkouts.
+  The system allows a user a reservation if the number of active reservations and checkouts is below their limit.
+  The system allows a Faculty member to have a higher limit of active reservations and checkouts compared to students.
+  The system calculates limitations based on the number of active reservations and checkouts; cancelling a reservation or returning equipment clears up space for new reservations or checkouts. Fulfilling a reservation, turns it into an active checkout.
+US-12: (FR-11, FR-15) As a user, I want to cancel a reservation, so that other people can reserve and check out the equipment.
+  A user is only able to cancel active reservations that belong to them.
+  The system cancels the active reservation owned only by that user and updates the equipment status to AVAILABLE and updates the reservation status to CANCELLED.
+  The system denies reservation cancellation if the reservation status is CANCELLED or FULFILLED or does not belong to the user.
+  The system denies reservation cancellation if the reservation does not exist.
+US-13: (FR-12, FR-15) As an administrator, I want to check out equipment to a user, so they can borrow the equipment for their benefit.
+  The system allows equipment with status of RESERVED to be checked out only by the user who reserved it and updates the reservation status to FULFILLED.
+  The system updates the equipment status to CHECKED_OUT.
+  The system updates the checkout status to ACTIVE.
+  The system allows equipment with status of AVAILABLE to be checked out by any student or faculty member.
+  The system denies equipment to be checked out if the equipment status is CHECKED_OUT, MAINTENANCE, or RESERVED by another user.
+  The system denies equipment to be checked out if the user exceeds their limitations.
+US-14: (FR-13) As an administrator, I want every checkout to record the current date and determine the due date of the equipment, so that users are aware of when equipment needs to be returned.
+  The system records the date of when the checkout took place.
+  The system calculates the due date based on the checkout date and loan period for the user role based on configuration.
+  The system displays the due date to the user.
+US-15: (FR-14, FR-15) As an administrator, I want to process equipment returns, so that equipment becomes available for other users to reserve and checkout.
+  The system updates the equipment status to AVAILABLE.
+  The system updates the checkout status to RETURNED.
+  The system rejects returning equipment that does not have the checkout status of ACTIVE.
+  The system records the return date for the equipment.
+US-16: (FR-16) As a user, I want to receive a notification when a reservation or checkout is successfully completed, so that I have a confirmation.
+  The system displays a successful reservation notification to the user if the reservation was successful.
+  The system displays a successful checkout notification to the user if the checkout was successful.
+  The system displays no notification if there was a failed reservation or checkout.
+US-17: (FR-9, FR-17, NFR-4, NFR-5) As a user, I want invalid operations to leave no inconsistent state, so that data remains clear, consistent, and reliable. 
+  The system displays JSON error messages with status and code if there is a business rule violation.
+  The system rolls back, if updates or adding new equipment fails.
+  The system erases partial changes, if reservation, cancellation, checkouts, or return operations fail.
+
+
+Priority Backlog:
+| Priority Rank | User Story                                    | Points | FRs / NFRs
+| 1             | US-3 Administrator role                       | 2      | FR-1
+| 2             | US-5 Add equipment                            | 3      | FR-3, FR-4, FR-5
+| 3             | US-1 Student role                             | 3      | FR-1
+| 4             | US-2 Faculty role                             | 3      | FR-1
+| 5             | US-7 Search and filter                        | 3      | FR-6
+| 6             | US-8 View Availability                        | 2      | FR-3, FR-7
+| 7             | US-9 Reserve equipment                        | 5      | FR-8, FR-15
+| 8             | US-10 Invalid reservation                     | 3      | FR-9
+| 9             | US-11 Reservation and checkout limitations    | 5      | FR-10
+| 10            | US-4 View current reservations and checkouts  | 3      | FR-2
+| 11            | US-13 Check out equipment                     | 5      | FR-12, FR-15  
+| 12            | US-14 Checkout date and due date              | 2      | FR-13
+| 13            | US-15 Return equipment                        | 3      | FR-14, FR-15
+| 14            | US-17 Roll back and error handling            | 5      | FR-9, FR-17, NFR-4, NF4-5
+| 15            | US-12 Cancel reservation                      | 3      | FR-11, FR-15
+| 16            | US-16 Notification                            | 3      | FR-16
+| 17            | US-6 Update equipment                         | 3      | FR-5, FR-15
+
+
+Total: 54 points.
+Note: While US-17 is ranked #14, error response is a cross-cutting requirement since its behavior needs to be built into user stories. US-17 is not included as a BDD scenario since its acceptance criteria is abstractly covered by other BDD scenarios.
