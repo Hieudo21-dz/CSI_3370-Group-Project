@@ -94,19 +94,3 @@ Run tests and generate the coverage report:
 ./mvnw test
 # report: target/site/jacoco/index.html
 ```
-
----
-
-## Team
-
-<!-- add names and roles -->
-| Member | Role |
-|--------|------|
-| Name | |
-| Name | |
-| Name | |
-
-## Course Info
-
-CSI 3370 – Software Engineering and Practice
-Semester Year · Instructor: Professor Name
